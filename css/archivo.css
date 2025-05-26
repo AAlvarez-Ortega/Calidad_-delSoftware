@@ -1,0 +1,132 @@
+/* Reset general */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  /* Fondo general */
+  body {
+    background: #f0f0f0;
+    color: #333;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* Título superior */
+  h1 {
+    text-align: center;
+    padding: 20px;
+    background-color: #fff;
+    color: #7a003c;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Contenedor general */
+  .container {
+    flex: 1;
+    display: flex;
+    height: 100%;
+  }
+  
+  /* Menú lateral izquierdo */
+  .sidebar {
+    width: 100px;
+    background-color: #fff;
+    border-right: 1px solid #ccc;
+    padding: 20px 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+  
+  .sidebar img {
+    width: 48px;
+    height: 48px;
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+  
+  .sidebar img:hover {
+    transform: scale(1.1);
+  }
+  
+  /* Área de contenido */
+  .content {
+    flex: 1;
+    padding: 30px;
+    background-color: #fafafa;
+    overflow-y: auto;
+  }
+  
+  /* Formularios */
+  form {
+    background-color: #fff;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.08);
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  label {
+    display: block;
+    margin: 10px 0 5px;
+    font-weight: bold;
+  }
+  
+  input[type="text"],
+  input[type="password"],
+  input[type="file"],
+  select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 16px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+  }
+  
+  input[type="submit"] {
+    background-color: #7a003c;
+    color: #fff;
+    border: none;
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.3s;
+  }
+  
+  input[type="submit"]:hover {
+    background-color: #5a002e;
+  }
+  
+  /* Formularios ocultos */
+  .hidden {
+    display: none;
+  }
+  
+  /* Galería de íconos para tipo de archivo */
+  .iconos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  
+  .iconos img {
+    width: 60px;
+    height: 60px;
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+  
+  .iconos img:hover {
+    transform: scale(1.1);
+  }
+  

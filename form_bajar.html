@@ -1,29 +1,70 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-	<meta charset="UTF-8">
-  <link rel="stylesheet" href="css/style.css">
-	<title>Descargar Archivo</title>
+  <meta charset="UTF-8">
+  <title>Descargar Archivo</title>
+  <link rel="stylesheet" href="css/archivo.css">
+  <style>
+    .iconos {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      justify-content: center;
+      margin-bottom: 30px;
+    }
+
+    .iconos img {
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .iconos img:hover {
+      transform: scale(1.1);
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .selector-titulo {
+      text-align: center;
+      color: #7a003c;
+      margin: 20px 0;
+    }
+  </style>
+  <script>
+    function mostrarFormulario(tipo) {
+      document.getElementById('formularioDescarga').classList.remove('hidden');
+      document.getElementById('tipoArchivo').value = tipo;
+      document.getElementById('textoTipo').innerText = tipo.toUpperCase();
+    }
+  </script>
 </head>
 <body>
-  <h2>Descargar Archivo</h2>
-  <p>Selecciona el tipo de Archivo a DESCARGAR</p>
-  <a href="form_listado.html" id="enlacePdf" data-valor="pdf"><img src="images/pdf.png" alt="Agregar Usuario" width="80" height="80"></a>
-  <a href="form_listado.html" data-valor="doc"><img src="images/doc.png" alt="Agregar Usuario" width="80" height="80"></a>
-  <a href="form_listado.html" data-valor="excel"><img src="images/excel.png" alt="Agregar Usuario" width="80" height="80"></a>
-  <a href="form_listado.html" data-valor="ppoint"><img src="images/ppoint.png" alt="Agregar Usuario" width="80" height="80"></a>
-  <a href="form_listado.html" data-valor="music"><img src="images/music.png" alt="Agregar Usuario" width="80" height="80"></a>
-  <a href="form_listado.html" data-valor="video"><img src="images/video.png" alt="Agregar Usuario" width="80" height="80"></a>
-  <a href="form_listado.html" data-valor="todos"><img src="images/files.png" alt="Agregar Usuario" width="80" height="80"></a>
-  <br><br>
-  <!--Mostrar solo si es Administrador-->
-  <a href="form_agregar_usuario.html" id="enlaceAgregar"><img src="images/agregar_usuario.png" alt="Agregar Usuario" width="80" height="80"></a>
-  <!--Mostrar solo si es Administrador-->
-  <a href="form_eliminar_usuario.html" id="enlaceEliminarUsuario"><img src="images/eliminar_usuario.png" alt="Eliminar Usuario" width="80" height="80"></a>
-  
-  <a href="form_subir.html" id="enlaceSubir"><img src="images/subir.png" alt="Subida" width="80" height="80"></a>
-  <a href="form_bajar.html" id="enlaceBajar"><img src="images/bajar.png" alt="Bajada" width="80" height="80"></a>
-  <a href="form_eliminar.html" id="enlaceEliminar"><img src="images/eliminar.png" alt="Eliminar archivo" width="80" height="80"></a>
-  <a href="salir.html" id="enlaceSalir"><img src="images/salir.png" alt="Salir" width="80" height="80"></a>
- </body>
+
+  <h2 class="selector-titulo">Selecciona el tipo de Archivo a DESCARGAR</h2>
+
+  <div class="iconos">
+    <img src="images/pdf.png" alt="PDF" width="80" onclick="mostrarFormulario('pdf')">
+    <img src="images/doc.png" alt="DOC" width="80" onclick="mostrarFormulario('doc')">
+    <img src="images/excel.png" alt="EXCEL" width="80" onclick="mostrarFormulario('excel')">
+    <img src="images/ppoint.png" alt="PPT" width="80" onclick="mostrarFormulario('ppoint')">
+    <img src="images/music.png" alt="Música" width="80" onclick="mostrarFormulario('music')">
+    <img src="images/video.png" alt="Video" width="80" onclick="mostrarFormulario('video')">
+    <img src="images/files.png" alt="Todos" width="80" onclick="mostrarFormulario('todos')">
+  </div>
+
+  <!-- Formulario dinámico -->
+  <form id="formularioDescarga" class="hidden" action="descargar_archivo.jsp" method="post">
+    <h2>Descargar archivos de tipo: <span id="textoTipo"></span></h2>
+    <input type="hidden" name="tipoArchivo" id="tipoArchivo">
+    <label for="archivo">Selecciona un archivo:</label>
+    <select name="archivo" id="archivo">
+      <option value="archivo1">archivo1</option>
+      <option value="archivo2">archivo2</option>
+    </select>
+    <input type="submit" value="Descargar">
+  </form>
+
+</body>
 </html>
