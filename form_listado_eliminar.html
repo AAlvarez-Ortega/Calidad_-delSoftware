@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Descargar Archivo</title>
+</head>
+<body>
+  <h2>Descargar Archivo</h2>
+  <form>
+    <label for="file_type">Selecciona el Archivo a Descargar:</label><br>
+    <!--Se deben extraer de la BD los nombres de archivos y solo mostrar los archivos con la extensión que se seleccionó en form_eliminar.html-->
+    <select id="archivo" name="archivo">
+      <option value="archivo1">archivo 1</option>
+      <option value="archivo2">archivo 2</option>
+      <option value="archivo3">archivo 3</option>
+    </select><br><br>
+    <input type="submit" value="EliminarNMK Archivo">
+  </form>  <br><br>
+  <!--Mostrar solo si es Administrador-->
+  <a href="form_agregar_usuario.html" id="enlaceAgregar"><img src="images/agregar_usuario.png" alt="Agregar Usuario" width="80" height="80"></a>
+  <!--Mostrar solo si es Administrador-->
+  <a href="form_eliminar_usuario.html" id="enlaceEliminarUsuario"><img src="images/eliminar_usuario.png" alt="Eliminar Usuario" width="80" height="80"></a>
+  
+  <a href="form_subir.html" id="enlaceSubir"><img src="images/subir.png" alt="Subida" width="80" height="80"></a>
+  <a href="form_bajar.html" id="enlaceBajar"><img src="images/bajar.png" alt="Bajada" width="80" height="80"></a>
+  <a href="form_eliminar.html" id="enlaceEliminar"><img src="images/eliminar.png" alt="Eliminar archivo" width="80" height="80"></a>
+  <a href="salir.html" id="enlaceSalir"><img src="images/salir.png" alt="Salir" width="80" height="80"></a>
+ </body>
+</html>
