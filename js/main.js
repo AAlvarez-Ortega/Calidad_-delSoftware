@@ -1,5 +1,23 @@
+import {
+  getAuth,
+  signOut,
+  createUserWithEmailAndPassword
+} from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+
+import {
+  auth,
+  db,
+  doc,
+  setDoc
+} from './firebase.js';
+
 document.addEventListener("DOMContentLoaded", () => {
-  // Función para mostrar formularios
+  const toggleBtn = document.getElementById('toggleMenu');
+  const sidebar = document.getElementById('sidebar');
+  const btnLogout = document.getElementById('btnLogout');
+  const formCrearUsuario = document.getElementById('formCrearUsuario');
+
+  // Mostrar formularios
   window.mostrarFormulario = function (id) {
     const formularios = document.querySelectorAll('.formulario');
     formularios.forEach(f => f.classList.add('hidden'));
@@ -8,7 +26,6 @@ document.addEventListener("DOMContentLoaded", () => {
     cerrarSidebarSiVisible();
   };
 
-  // Subformulario: descarga
   window.mostrarFormularioDescarga = function (tipo) {
     const form = document.getElementById('formularioDescarga');
     if (form) {
@@ -19,7 +36,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
-  // Subformulario: eliminación
   window.mostrarFormularioEliminar = function (tipo) {
     const form = document.getElementById('formularioEliminar');
     if (form) {
@@ -30,10 +46,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
-  // Botón para desplegar menú
-  const toggleBtn = document.getElementById('toggleMenu');
-  const sidebar = document.getElementById('sidebar');
-
   if (toggleBtn && sidebar) {
     toggleBtn.addEventListener('click', () => {
       sidebar.classList.toggle('hidden');
@@ -41,46 +53,14 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Cerrar menú automáticamente en móvil
   function cerrarSidebarSiVisible() {
     if (window.innerWidth <= 768 && sidebar && !sidebar.classList.contains('hidden')) {
       sidebar.classList.add('hidden');
       document.body.classList.remove('sidebar-open');
     }
   }
-});
 
-//serrar sesion
-import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
-import { auth } from './firebase.js';
-
-document.addEventListener('DOMContentLoaded', () => {
-  const btnLogout = document.getElementById('btnLogout');
-
-  if (btnLogout) {
-    btnLogout.addEventListener('click', () => {
-      signOut(auth).then(() => {
-        // 🔒 Sesión cerrada
-        localStorage.removeItem('usuario');
-        window.location.href = 'index.html';
-      }).catch((error) => {
-        console.error('Error al cerrar sesión:', error);
-        alert('No se pudo cerrar sesión.');
-      });
-    });
-  }
-});
-
-
-//logica, crear usuarios
-import { getAuth, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
-import { auth } from './firebase.js';
-
-document.addEventListener('DOMContentLoaded', () => {
-  const btnLogout = document.getElementById('btnLogout');
-  const formCrearUsuario = document.getElementById('formCrearUsuario');
-
-  // 🔐 Cerrar sesión
+  // 🔐 Logout
   if (btnLogout) {
     btnLogout.addEventListener('click', () => {
       signOut(auth).then(() => {
@@ -93,7 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 🧑‍💻 Crear usuario
+  // 👤 Crear usuario y guardar perfil en Firestore
   if (formCrearUsuario) {
     formCrearUsuario.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -103,6 +83,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
       try {
         const cred = await createUserWithEmailAndPassword(auth, email, password);
+        const uid = cred.user.uid;
+
+        // Guardar perfil en Firestore
+        await setDoc(doc(db, "usuarios", uid), {
+          correo: email,
+          perfil: perfil,
+          creado: new Date()
+        });
+
         alert(`Usuario ${email} creado con éxito como ${perfil}`);
         formCrearUsuario.reset();
       } catch (error) {
@@ -112,3 +101,4 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
+
