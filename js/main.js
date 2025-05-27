@@ -7,7 +7,8 @@ import {
 
 import {
   auth,
-  db
+  db,
+  firebaseConfig
 } from './firebase.js';
 
 import {
@@ -15,6 +16,8 @@ import {
   setDoc,
   getDoc
 } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   const toggleBtn = document.getElementById('toggleMenu');
@@ -78,7 +81,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Crear usuario
+  // Crear usuario sin cerrar sesión del admin
   if (formCrearUsuario) {
     formCrearUsuario.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -87,14 +90,22 @@ document.addEventListener("DOMContentLoaded", () => {
       const perfil = document.getElementById('perfilUsuario').value;
 
       try {
-        const cred = await createUserWithEmailAndPassword(auth, email, password);
+        // Crear app secundaria
+        const secondaryApp = initializeApp(firebaseConfig, "Secondary");
+        const secondaryAuth = getAuth(secondaryApp);
+
+        const cred = await createUserWithEmailAndPassword(secondaryAuth, email, password);
         const uid = cred.user.uid;
+
         await setDoc(doc(db, "usuarios", uid), {
           correo: email,
           perfil: perfil,
           creado: new Date()
         });
+
         alert(`Usuario ${email} creado con éxito como ${perfil}`);
+
+        await signOut(secondaryAuth);
         formCrearUsuario.reset();
       } catch (error) {
         if (error.code === "auth/email-already-in-use") {
