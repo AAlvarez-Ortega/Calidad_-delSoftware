@@ -1,8 +1,12 @@
-
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-analytics.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
-import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
+import { getAuth } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+import {
+  getFirestore,
+  doc,
+  setDoc,
+  getDoc
+} from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js"; // ✅
 
 const firebaseConfig = {
   apiKey: "AIzaSyBeX3lbKvNlx6JXZWFmg1Dw091DV2Qg7go",
@@ -14,20 +18,9 @@ const firebaseConfig = {
   measurementId: "G-08S65YPHTH"
 };
 
-// Inicializa Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const auth = getAuth(app);
-const db = getFirestore(app);
+const db = getFirestore(app); // ✅
 
-// Exportar todo lo necesario
-export {
-  app,
-  auth,
-  db,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut,
-  doc,
-  setDoc
-};
+export { app, auth, db, doc, setDoc, getDoc }; // ✅
