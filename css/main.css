@@ -49,7 +49,7 @@ body {
   overflow: hidden;
 }
 
-/* Sidebar con animación */
+/* Sidebar */
 .sidebar {
   width: 80px;
   min-width: 80px;
@@ -85,12 +85,18 @@ body {
   transform: scale(1.1);
 }
 
-/* Contenido */
+/* Contenido principal */
 .content {
   flex: 1;
   overflow-y: auto;
   padding: 20px;
   background-color: #fafafa;
+  transition: margin-left 0.4s ease-in-out;
+  margin-left: 0;
+}
+
+body.sidebar-open .content {
+  margin-left: 80px; /* desplazamiento igual al ancho del menú */
 }
 
 /* Formularios */
@@ -154,7 +160,7 @@ input[type="submit"]:hover {
   transform: scale(1.1);
 }
 
-/* Formularios ocultos por lógica */
+/* Formularios ocultos */
 .hidden {
   display: none;
 }
@@ -173,6 +179,10 @@ input[type="submit"]:hover {
     height: calc(100vh - 60px);
     background-color: #fff;
     box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+  }
+
+  body.sidebar-open .content {
+    margin-left: 0;
   }
 
   .content {
