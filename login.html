@@ -1,25 +1,30 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Iniciar Sesión</title>
-  <link rel="stylesheet" href="css/login.css">
+  <link rel="stylesheet" href="css/login.css" />
 </head>
 <body>
   <div class="login-container">
-    <img src="images/agregar_usuario.png" alt="Login" class="icono">
+    <img src="images/agregar_usuario.png" alt="Login" class="icono" />
     <h1>Iniciar Sesión</h1>
 
-    <form action="index.html" method="get">
-      <label for="usuario">Usuario</label>
-      <input type="text" id="usuario" name="usuario" required>
+    <form id="loginForm">
+      <label for="usuario">Correo electrónico</label>
+      <input type="text" id="usuario" name="usuario" required />
 
       <label for="contrasena">Contraseña</label>
-      <input type="password" id="contrasena" name="contrasena" required>
+      <input type="password" id="contrasena" name="contrasena" required />
 
-      <input type="submit" value="Ingresar">
+      <input type="submit" value="Ingresar" />
     </form>
   </div>
+
+  <!-- Scripts -->
+  <script type="module" src="js/firebase.js"></script>
+  <script type="module" src="js/login.js"></script>
 </body>
 </html>
+
