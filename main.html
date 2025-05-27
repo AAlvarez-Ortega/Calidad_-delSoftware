@@ -7,14 +7,15 @@
   <link rel="stylesheet" href="css/main.css" />
 </head>
 <body>
-  <!-- Encabezado con botón de menú -->
+  <!-- Encabezado -->
   <header class="topbar">
     <button id="toggleMenu">☰</button>
     <h1>Menú Principal</h1>
+    <span id="userInfo" style="margin-left:auto; font-size:0.8rem; padding-right:10px;"></span>
   </header>
 
   <div class="container">
-    <!-- Menú lateral colapsable -->
+    <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
       <img src="images/agregar_usuario.png" alt="Agregar Usuario" title="Agregar Usuario" onclick="mostrarFormulario('agregar')" />
       <img src="images/eliminar_usuario.png" alt="Eliminar Usuario" title="Eliminar Usuario" onclick="mostrarFormulario('eliminar')" />
@@ -22,43 +23,41 @@
       <img src="images/bajar.png" alt="Bajar Archivo" title="Bajar Archivo" onclick="mostrarFormulario('bajar')" />
       <img src="images/eliminar.png" alt="Eliminar Archivo" title="Eliminar Archivo" onclick="mostrarFormulario('eliminar_archivo')" />
       <img src="images/salir.png" alt="Salir" title="Salir" id="btnLogout" />
-
     </div>
 
-    <!-- Contenido dinámico -->
+    <!-- Contenido -->
     <div class="content">
-      <!-- Agregar Usuario -->
+      <!-- Formulario: Crear Usuario -->
       <div id="agregar" class="formulario hidden">
         <form id="formCrearUsuario">
           <h2>Agregar Usuario</h2>
-          <label>Correo electrónico:</label>
-          <input type="email" name="nuevo" id="nuevoCorreo" required />
+          <label for="nuevoCorreo">Correo electrónico:</label>
+          <input type="email" id="nuevoCorreo" required />
 
-          <label>Contraseña:</label>
-          <input type="password" name="new_pass" id="nuevaClave" required />
+          <label for="nuevaClave">Contraseña:</label>
+          <input type="password" id="nuevaClave" required />
 
-          <label>Perfil:</label>
-          <select name="perfil" id="perfilUsuario">
+          <label for="perfilUsuario">Perfil:</label>
+          <select id="perfilUsuario">
             <option value="admin">Admin</option>
             <option value="user">User</option>
           </select>
 
           <input type="submit" value="Guardar" />
         </form>
-
       </div>
 
-      <!-- Eliminar Usuario -->
+      <!-- Formulario: Eliminar Usuario -->
       <div id="eliminar" class="formulario hidden">
         <form>
           <h2>Eliminar Usuario</h2>
-          <label>Usuario:</label>
-          <input type="text" name="usuario" />
+          <label>Correo:</label>
+          <input type="email" name="correo" />
           <input type="submit" value="Eliminar" />
         </form>
       </div>
 
-      <!-- Subir Archivo -->
+      <!-- Subir -->
       <div id="subir" class="formulario hidden">
         <form>
           <h2>Subir Archivo</h2>
@@ -67,25 +66,12 @@
         </form>
       </div>
 
-      <!-- Descargar Archivo -->
+      <!-- Descargar -->
       <div id="bajar" class="formulario hidden">
-        <h2>Selecciona el tipo de archivo a DESCARGAR</h2>
-        <div class="iconos">
-          <img src="images/pdf.png" alt="PDF" width="60" onclick="mostrarFormularioDescarga('pdf')" />
-          <img src="images/doc.png" alt="DOC" width="60" onclick="mostrarFormularioDescarga('doc')" />
-          <img src="images/excel.png" alt="Excel" width="60" onclick="mostrarFormularioDescarga('excel')" />
-          <img src="images/ppoint.png" alt="PowerPoint" width="60" onclick="mostrarFormularioDescarga('ppoint')" />
-          <img src="images/music.png" alt="Música" width="60" onclick="mostrarFormularioDescarga('music')" />
-          <img src="images/video.png" alt="Video" width="60" onclick="mostrarFormularioDescarga('video')" />
-          <img src="images/files.png" alt="Todos" width="60" onclick="mostrarFormularioDescarga('todos')" />
-        </div>
-        <form id="formularioDescarga" class="hidden" action="descargar_archivo.jsp" method="post">
-          <h3>Descargar archivos de tipo: <span id="tipoSeleccionadoDescarga"></span></h3>
-          <input type="hidden" name="tipoArchivo" id="tipoArchivoDescarga" />
-          <label for="archivo">Selecciona un archivo:</label>
+        <form>
+          <h2>Descargar Archivo</h2>
           <select name="archivo">
             <option value="archivo1.pdf">archivo1.pdf</option>
-            <option value="archivo2.pdf">archivo2.pdf</option>
           </select>
           <input type="submit" value="Descargar" />
         </form>
@@ -93,23 +79,11 @@
 
       <!-- Eliminar Archivo -->
       <div id="eliminar_archivo" class="formulario hidden">
-        <h2>Selecciona el tipo de archivo a ELIMINAR</h2>
-        <div class="iconos">
-          <img src="images/pdf.png" alt="PDF" width="60" onclick="mostrarFormularioEliminar('pdf')" />
-          <img src="images/doc.png" alt="DOC" width="60" onclick="mostrarFormularioEliminar('doc')" />
-          <img src="images/excel.png" alt="Excel" width="60" onclick="mostrarFormularioEliminar('excel')" />
-          <img src="images/ppoint.png" alt="PowerPoint" width="60" onclick="mostrarFormularioEliminar('ppoint')" />
-          <img src="images/music.png" alt="Música" width="60" onclick="mostrarFormularioEliminar('music')" />
-          <img src="images/video.png" alt="Video" width="60" onclick="mostrarFormularioEliminar('video')" />
-          <img src="images/files.png" alt="Todos" width="60" onclick="mostrarFormularioEliminar('todos')" />
-        </div>
-        <form id="formularioEliminar" class="hidden" action="eliminar_archivo.jsp" method="post">
-          <h3>Eliminar archivos de tipo: <span id="tipoSeleccionadoEliminar"></span></h3>
-          <input type="hidden" name="tipoArchivo" id="tipoArchivoEliminar" />
+        <form>
+          <h2>Eliminar Archivo</h2>
           <label for="archivo">Selecciona un archivo:</label>
-          <select name="archivo">
+          <select id="archivo" name="archivo">
             <option value="archivo1.pdf">archivo1.pdf</option>
-            <option value="archivo2.pdf">archivo2.pdf</option>
           </select>
           <input type="submit" value="Eliminar" />
         </form>
@@ -117,22 +91,8 @@
     </div>
   </div>
 
-  <!-- Script externo -->
-  <script src="js/main.js"></script>
+  <!-- Scripts -->
   <script type="module" src="js/firebase.js"></script>
-  <script type="module">
-  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
-  import { app } from './js/firebase.js';
-
-  const auth = getAuth(app);
-  onAuthStateChanged(auth, (user) => {
-    if (!user) {
-      // Si no hay usuario, redirige a login
-      window.location.href = "index.html";
-    }
-  });
-</script>
-
-
+  <script type="module" src="js/main.js"></script>
 </body>
 </html>
