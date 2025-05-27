@@ -1,4 +1,3 @@
-/* Reset básico */
 * {
   margin: 0;
   padding: 0;
@@ -15,25 +14,25 @@ body {
   padding: 20px;
 }
 
-/* Contenedor que crece con el alto del dispositivo */
+/* Contenedor adaptable */
 .login-container {
   background-color: #fff;
   padding: 40px 30px;
   border-radius: 12px;
   box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
   text-align: center;
-  width: 100%;
+  width: 90%;
   max-width: 420px;
-  min-height: 90vh;
+  min-height: 480px;
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
+/* Ícono centrado */
 .icono {
   width: 64px;
-  margin-bottom: 20px;
-  align-self: center;
+  margin: 0 auto 20px auto;
 }
 
 h1 {
@@ -48,6 +47,7 @@ form {
   text-align: left;
 }
 
+/* Etiquetas e inputs */
 label {
   font-weight: bold;
   color: #444;
@@ -75,4 +75,20 @@ input[type="submit"] {
 
 input[type="submit"]:hover {
   background-color: #5a002e;
+}
+
+/* 📱 MEDIA QUERIES para pantallas grandes */
+@media (min-width: 768px) {
+  .login-container {
+    max-width: 480px;
+    min-height: 520px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .login-container {
+    max-width: 540px;
+    min-height: 560px;
+    padding: 50px 40px;
+  }
 }
