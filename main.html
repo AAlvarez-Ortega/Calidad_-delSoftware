@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Menú Principal</title>
-  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/main.css">
 </head>
 <body>
-  <!-- Encabezado -->
   <header class="topbar">
     <button id="toggleMenu">☰</button>
     <h1>Menú Principal</h1>
@@ -15,80 +14,85 @@
   </header>
 
   <div class="container">
-    <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
-      <img src="images/agregar_usuario.png" alt="Agregar Usuario" title="Agregar Usuario" onclick="mostrarFormulario('agregar')" />
-      <img src="images/eliminar_usuario.png" alt="Eliminar Usuario" title="Eliminar Usuario" onclick="mostrarFormulario('eliminar')" />
-      <img src="images/subir.png" alt="Subir Archivo" title="Subir Archivo" onclick="mostrarFormulario('subir')" />
-      <img src="images/bajar.png" alt="Bajar Archivo" title="Bajar Archivo" onclick="mostrarFormulario('bajar')" />
-      <img src="images/eliminar.png" alt="Eliminar Archivo" title="Eliminar Archivo" onclick="mostrarFormulario('eliminar_archivo')" />
-      <img src="images/salir.png" alt="Salir" title="Salir" id="btnLogout" />
+      <img src="images/agregar_usuario.png" title="Agregar Usuario" onclick="mostrarFormulario('agregar')">
+      <img src="images/eliminar_usuario.png" title="Eliminar Usuario" onclick="mostrarFormulario('eliminar')">
+      <img src="images/subir.png" title="Subir Archivo" onclick="mostrarFormulario('subir')">
+      <img src="images/bajar.png" title="Bajar Archivo" onclick="mostrarFormulario('bajar')">
+      <img src="images/eliminar.png" title="Eliminar Archivo" onclick="mostrarFormulario('eliminar_archivo')">
+      <img src="images/salir.png" title="Salir" id="btnLogout">
     </div>
 
-    <!-- Contenido -->
     <div class="content">
       <div id="agregar" class="formulario hidden">
         <form id="formCrearUsuario">
           <h2>Agregar Usuario</h2>
-          <label for="nuevoCorreo">Correo electrónico:</label>
-          <input type="email" id="nuevoCorreo" required />
-
+          <label for="nuevoCorreo">Correo:</label>
+          <input type="email" id="nuevoCorreo" required>
           <label for="nuevaClave">Contraseña:</label>
-          <input type="password" id="nuevaClave" required />
-
+          <input type="password" id="nuevaClave" required>
           <label for="perfilUsuario">Perfil:</label>
           <select id="perfilUsuario">
             <option value="admin">Admin</option>
             <option value="user">User</option>
           </select>
-
-          <input type="submit" value="Guardar" />
+          <input type="submit" value="Guardar">
         </form>
       </div>
 
       <div id="eliminar" class="formulario hidden">
-        <form>
-          <h2>Eliminar Usuario</h2>
-          <label>Correo:</label>
-          <input type="email" name="correo" />
-          <input type="submit" value="Eliminar" />
-        </form>
+        <h2>Eliminar Usuario</h2>
+        <p>Esta funcionalidad aún no está disponible en esta vista.</p>
       </div>
 
       <div id="subir" class="formulario hidden">
-        <form>
+        <form id="formSubirArchivo">
           <h2>Subir Archivo</h2>
-          <input type="file" name="file" />
-          <input type="submit" value="Subir" />
+          <div class="iconos">
+            <img src="images/pdf.png" title="PDF">
+            <img src="images/doc.png" title="DOC">
+            <img src="images/excel.png" title="Excel">
+            <img src="images/ppoint.png" title="PPT">
+            <img src="images/music.png" title="Música">
+            <img src="images/video.png" title="Video">
+            <img src="images/files.png" title="Todos">
+          </div>
+          <input type="file" id="archivoSubir" required>
+          <input type="submit" value="Subir">
         </form>
       </div>
 
       <div id="bajar" class="formulario hidden">
-        <form>
-          <h2>Descargar Archivo</h2>
-          <select name="archivo">
-            <option value="archivo1.pdf">archivo1.pdf</option>
-          </select>
-          <input type="submit" value="Descargar" />
-        </form>
+        <h2>Descargar Archivos</h2>
+        <div class="iconos">
+          <img class="filtro-descarga" src="images/pdf.png" data-tipo=".pdf" title="PDF">
+          <img class="filtro-descarga" src="images/doc.png" data-tipo=".docx" title="DOC">
+          <img class="filtro-descarga" src="images/excel.png" data-tipo=".xlsx" title="Excel">
+          <img class="filtro-descarga" src="images/ppoint.png" data-tipo=".pptx" title="PPT">
+          <img class="filtro-descarga" src="images/music.png" data-tipo=".mp3" title="Música">
+          <img class="filtro-descarga" src="images/video.png" data-tipo=".mp4" title="Video">
+          <img class="filtro-descarga" src="images/files.png" data-tipo="todos" title="Todos">
+        </div>
+        <ul id="listaDescargas"></ul>
       </div>
 
       <div id="eliminar_archivo" class="formulario hidden">
-        <form>
-          <h2>Eliminar Archivo</h2>
-          <label for="archivo">Selecciona un archivo:</label>
-          <select id="archivo" name="archivo">
-            <option value="archivo1.pdf">archivo1.pdf</option>
-          </select>
-          <input type="submit" value="Eliminar" />
-        </form>
+        <h2>Eliminar Archivos</h2>
+        <div class="iconos">
+          <img class="filtro-eliminar" src="images/pdf.png" data-tipo=".pdf" title="PDF">
+          <img class="filtro-eliminar" src="images/doc.png" data-tipo=".docx" title="DOC">
+          <img class="filtro-eliminar" src="images/excel.png" data-tipo=".xlsx" title="Excel">
+          <img class="filtro-eliminar" src="images/ppoint.png" data-tipo=".pptx" title="PPT">
+          <img class="filtro-eliminar" src="images/music.png" data-tipo=".mp3" title="Música">
+          <img class="filtro-eliminar" src="images/video.png" data-tipo=".mp4" title="Video">
+          <img class="filtro-eliminar" src="images/files.png" data-tipo="todos" title="Todos">
+        </div>
+        <ul id="listaEliminar"></ul>
       </div>
     </div>
   </div>
 
-  <!-- Scripts -->
   <script type="module" src="js/firebase.js"></script>
   <script type="module" src="js/main.js"></script>
 </body>
 </html>
-

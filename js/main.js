@@ -1,120 +1,169 @@
+// main.js
 import {
   getAuth,
   signOut,
   createUserWithEmailAndPassword,
-  onAuthStateChanged
+  onAuthStateChanged,
 } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
 
 import {
-  auth,
-  db,
-  firebaseConfig
-} from './firebase.js';
+  getStorage,
+  ref,
+  uploadBytes,
+  listAll,
+  getDownloadURL,
+  deleteObject
+} from "https://www.gstatic.com/firebasejs/11.8.1/firebase-storage.js";
 
 import {
+  initializeApp
+} from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
+
+import {
+  getFirestore,
   doc,
   setDoc,
   getDoc
 } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
+import { auth, db, app } from "./firebase.js";
 
-document.addEventListener("DOMContentLoaded", () => {
-  const toggleBtn = document.getElementById('toggleMenu');
-  const sidebar = document.getElementById('sidebar');
-  const btnLogout = document.getElementById('btnLogout');
-  const formCrearUsuario = document.getElementById('formCrearUsuario');
+const storage = getStorage(app);
 
-  // Mostrar formularios
-  window.mostrarFormulario = function (id) {
-    const formularios = document.querySelectorAll('.formulario');
-    formularios.forEach(f => f.classList.add('hidden'));
-    const target = document.getElementById(id);
-    if (target) target.classList.remove('hidden');
-    cerrarSidebarSiVisible();
-  };
+let userProfile = null;
 
-  if (toggleBtn && sidebar) {
-    toggleBtn.addEventListener('click', () => {
-      sidebar.classList.toggle('hidden');
-      document.body.classList.toggle('sidebar-open', !sidebar.classList.contains('hidden'));
-    });
+function cerrarSidebarSiVisible() {
+  const sidebar = document.getElementById("sidebar");
+  if (window.innerWidth <= 768 && sidebar && !sidebar.classList.contains("hidden")) {
+    sidebar.classList.add("hidden");
+    document.body.classList.remove("sidebar-open");
   }
+}
 
-  function cerrarSidebarSiVisible() {
-    if (window.innerWidth <= 768 && sidebar && !sidebar.classList.contains('hidden')) {
-      sidebar.classList.add('hidden');
-      document.body.classList.remove('sidebar-open');
-    }
-  }
+function mostrarFormulario(id) {
+  document.querySelectorAll(".formulario").forEach((f) => f.classList.add("hidden"));
+  document.getElementById(id)?.classList.remove("hidden");
+  cerrarSidebarSiVisible();
+}
 
-  // Validar perfil
-  onAuthStateChanged(auth, async (user) => {
-    if (user) {
-      const docSnap = await getDoc(doc(db, "usuarios", user.uid));
-      if (docSnap.exists()) {
-        const data = docSnap.data();
-        document.getElementById("userInfo").textContent = `${data.correo} (${data.perfil})`;
+window.mostrarFormulario = mostrarFormulario;
 
-        if (data.perfil !== "admin") {
-          document.getElementById("agregar").style.display = "none";
-          document.getElementById("eliminar").style.display = "none";
-        }
-      } else {
-        alert("No se encontró el perfil del usuario.");
+// Subir archivo
+const formSubir = document.getElementById("formSubirArchivo");
+formSubir?.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const file = document.getElementById("archivoSubir").files[0];
+  if (!file) return alert("Selecciona un archivo");
+
+  const storageRef = ref(storage, `archivos/${file.name}`);
+  await uploadBytes(storageRef, file);
+  alert("Archivo subido exitosamente");
+  formSubir.reset();
+});
+
+// Listar archivos por tipo
+const filtros = document.querySelectorAll(".filtro-descarga");
+filtros.forEach((icono) => {
+  icono.addEventListener("click", async () => {
+    const tipo = icono.dataset.tipo;
+    const lista = document.getElementById("listaDescargas");
+    lista.innerHTML = "Cargando...";
+    const folderRef = ref(storage, "archivos");
+    const res = await listAll(folderRef);
+    lista.innerHTML = "";
+
+    res.items.forEach(async (itemRef) => {
+      const url = await getDownloadURL(itemRef);
+      const name = itemRef.name;
+      if (tipo === "todos" || name.endsWith(tipo)) {
+        const li = document.createElement("li");
+        li.innerHTML = `<a href="${url}" target="_blank">${name}</a>`;
+        lista.appendChild(li);
       }
-    } else {
-      window.location.href = "index.html";
-    }
+    });
   });
+});
 
-  // Logout
-  if (btnLogout) {
-    btnLogout.addEventListener('click', () => {
-      signOut(auth).then(() => {
-        localStorage.removeItem('usuario');
-        window.location.href = 'index.html';
-      }).catch((error) => {
-        alert('Error al cerrar sesión.');
-        console.error(error);
-      });
-    });
-  }
+// Eliminar archivos
+const filtrosEliminar = document.querySelectorAll(".filtro-eliminar");
+filtrosEliminar.forEach((icono) => {
+  icono.addEventListener("click", async () => {
+    const tipo = icono.dataset.tipo;
+    const lista = document.getElementById("listaEliminar");
+    lista.innerHTML = "Cargando...";
+    const folderRef = ref(storage, "archivos");
+    const res = await listAll(folderRef);
+    lista.innerHTML = "";
 
-  // Crear usuario sin cerrar sesión del admin
-  if (formCrearUsuario) {
-    formCrearUsuario.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const email = document.getElementById('nuevoCorreo').value;
-      const password = document.getElementById('nuevaClave').value;
-      const perfil = document.getElementById('perfilUsuario').value;
-
-      try {
-        // Crear app secundaria
-        const secondaryApp = initializeApp(firebaseConfig, "Secondary");
-        const secondaryAuth = getAuth(secondaryApp);
-
-        const cred = await createUserWithEmailAndPassword(secondaryAuth, email, password);
-        const uid = cred.user.uid;
-
-        await setDoc(doc(db, "usuarios", uid), {
-          correo: email,
-          perfil: perfil,
-          creado: new Date()
-        });
-
-        alert(`Usuario ${email} creado con éxito como ${perfil}`);
-
-        await signOut(secondaryAuth);
-        formCrearUsuario.reset();
-      } catch (error) {
-        if (error.code === "auth/email-already-in-use") {
-          alert("El correo ya está registrado.");
-        } else {
-          alert("Error al crear usuario.");
-        }
-        console.error(error.code, error.message);
+    res.items.forEach(async (itemRef) => {
+      const name = itemRef.name;
+      if (tipo === "todos" || name.endsWith(tipo)) {
+        const li = document.createElement("li");
+        li.innerHTML = `${name} <button data-path="${itemRef.fullPath}">Eliminar</button>`;
+        lista.appendChild(li);
       }
     });
+  });
+});
+
+document.getElementById("listaEliminar")?.addEventListener("click", async (e) => {
+  if (e.target.tagName === "BUTTON") {
+    const path = e.target.dataset.path;
+    const fileRef = ref(storage, path);
+    await deleteObject(fileRef);
+    alert("Archivo eliminado");
+    e.target.parentElement.remove();
+  }
+});
+
+// Crear usuario
+const formCrearUsuario = document.getElementById("formCrearUsuario");
+formCrearUsuario?.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  if (!userProfile || userProfile.perfil !== "admin") return alert("No tienes permisos para crear usuarios");
+
+  const email = document.getElementById("nuevoCorreo").value;
+  const password = document.getElementById("nuevaClave").value;
+  const perfil = document.getElementById("perfilUsuario").value;
+
+  const secondaryApp = initializeApp(app.options, "Secundaria");
+  const secondaryAuth = getAuth(secondaryApp);
+
+  try {
+    const cred = await createUserWithEmailAndPassword(secondaryAuth, email, password);
+    await setDoc(doc(getFirestore(secondaryApp), "usuarios", cred.user.uid), {
+      correo: email,
+      perfil,
+      creado: new Date()
+    });
+    alert("Usuario creado correctamente");
+  } catch (err) {
+    console.error(err);
+    alert("Error al crear usuario");
+  } finally {
+    await signOut(secondaryAuth);
+  }
+});
+
+// Logout
+const btnLogout = document.getElementById("btnLogout");
+btnLogout?.addEventListener("click", () => {
+  signOut(auth).then(() => {
+    localStorage.removeItem("usuario");
+    window.location.href = "index.html";
+  });
+});
+
+// Validar acceso
+onAuthStateChanged(auth, async (user) => {
+  if (!user) return (window.location.href = "index.html");
+  const snap = await getDoc(doc(db, "usuarios", user.uid));
+  if (snap.exists()) {
+    userProfile = snap.data();
+    document.getElementById("userInfo").textContent = `${userProfile.correo} (${userProfile.perfil})`;
+    if (userProfile.perfil !== "admin") {
+      document.getElementById("agregar")?.remove();
+      document.getElementById("eliminar")?.remove();
+    }
   }
 });
