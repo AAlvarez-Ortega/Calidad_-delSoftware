@@ -49,3 +49,24 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 });
+
+import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+import { auth } from './firebase.js';
+
+document.addEventListener('DOMContentLoaded', () => {
+  const btnLogout = document.getElementById('btnLogout');
+
+  if (btnLogout) {
+    btnLogout.addEventListener('click', () => {
+      signOut(auth).then(() => {
+        // 🔒 Sesión cerrada
+        localStorage.removeItem('usuario');
+        window.location.href = 'index.html';
+      }).catch((error) => {
+        console.error('Error al cerrar sesión:', error);
+        alert('No se pudo cerrar sesión.');
+      });
+    });
+  }
+});
+
