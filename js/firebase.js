@@ -3,13 +3,13 @@ import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.8.1/firebase
 import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyB...tu_clave...",
+  apiKey: "AIzaSyBeX3lbKvNlx6JXZWFmg1Dw091DV2Qg7go",
   authDomain: "calidad-del-software-fcd98.firebaseapp.com",
   projectId: "calidad-del-software-fcd98",
-  storageBucket: "calidad-del-software-fcd98.appspot.com",
-  messagingSenderId: "880993979877",
-  appId: "1:880993979877:web:3ab418caf2e7e8bc21030c",
-  measurementId: "G-0856SYPHTH"
+  storageBucket: "calidad-del-software-fcd98.firebasestorage.app",
+  messagingSenderId: "808993979877",
+  appId: "1:808993979877:web:3ab418caf2e7e8bc21030c",
+  measurementId: "G-08S65YPHTH"
 };
 
 const app = initializeApp(firebaseConfig);
