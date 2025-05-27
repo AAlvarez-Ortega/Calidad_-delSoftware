@@ -1,15 +1,45 @@
 import {
   getAuth,
   signOut,
-  createUserWithEmailAndPassword
+  createUserWithEmailAndPassword,
+  onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
 
 import {
   auth,
   db,
   doc,
-  setDoc
+  setDoc,
+   getDoc
 } from './firebase.js';
+
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    const uid = user.uid;
+    const docRef = doc(db, "usuarios", uid);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      const perfil = docSnap.data().perfil;
+
+      // Mostrar correo en la interfaz
+      document.getElementById('userInfo').textContent = `Perfil: ${perfil}`;
+
+      if (perfil !== 'admin') {
+        // Ocultar formularios que no son para usuarios normales
+        document.getElementById('agregar').remove();
+        document.getElementById('eliminar').remove();
+        document.querySelector('img[title="Agregar Usuario"]').remove();
+        document.querySelector('img[title="Eliminar Usuario"]').remove();
+      }
+
+    } else {
+      alert("No se encontró información de perfil.");
+    }
+  } else {
+    window.location.href = 'index.html'; // Redirigir si no hay sesión
+  }
+});
 
 document.addEventListener("DOMContentLoaded", () => {
   const toggleBtn = document.getElementById('toggleMenu');
