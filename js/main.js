@@ -7,11 +7,14 @@ import {
 
 import {
   auth,
-  db,
+  db
+} from './firebase.js';
+
+import {
   doc,
   setDoc,
   getDoc
-} from './firebase.js';
+} from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   const toggleBtn = document.getElementById('toggleMenu');
@@ -28,26 +31,6 @@ document.addEventListener("DOMContentLoaded", () => {
     cerrarSidebarSiVisible();
   };
 
-  window.mostrarFormularioDescarga = function (tipo) {
-    const form = document.getElementById('formularioDescarga');
-    if (form) {
-      form.classList.remove('hidden');
-      document.getElementById('tipoArchivoDescarga').value = tipo;
-      document.getElementById('tipoSeleccionadoDescarga').innerText = tipo.toUpperCase();
-      cerrarSidebarSiVisible();
-    }
-  };
-
-  window.mostrarFormularioEliminar = function (tipo) {
-    const form = document.getElementById('formularioEliminar');
-    if (form) {
-      form.classList.remove('hidden');
-      document.getElementById('tipoArchivoEliminar').value = tipo;
-      document.getElementById('tipoSeleccionadoEliminar').innerText = tipo.toUpperCase();
-      cerrarSidebarSiVisible();
-    }
-  };
-
   if (toggleBtn && sidebar) {
     toggleBtn.addEventListener('click', () => {
       sidebar.classList.toggle('hidden');
@@ -62,7 +45,27 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // 🔐 Logout
+  // Validar perfil
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      const docSnap = await getDoc(doc(db, "usuarios", user.uid));
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        document.getElementById("userInfo").textContent = `${data.correo} (${data.perfil})`;
+
+        if (data.perfil !== "admin") {
+          document.getElementById("agregar").style.display = "none";
+          document.getElementById("eliminar").style.display = "none";
+        }
+      } else {
+        alert("No se encontró el perfil del usuario.");
+      }
+    } else {
+      window.location.href = "index.html";
+    }
+  });
+
+  // Logout
   if (btnLogout) {
     btnLogout.addEventListener('click', () => {
       signOut(auth).then(() => {
@@ -75,31 +78,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Detectar perfil y ocultar formularios si no es admin
-  onAuthStateChanged(auth, async (user) => {
-    if (user) {
-      const uid = user.uid;
-      const userDoc = await getDoc(doc(db, "usuarios", uid));
-      if (userDoc.exists()) {
-        const perfil = userDoc.data().perfil;
-        document.getElementById('userInfo').textContent = `Perfil: ${perfil}`;
-
-        if (perfil !== 'admin') {
-          const adminForms = ['agregar', 'eliminar'];
-          adminForms.forEach(id => {
-            const form = document.getElementById(id);
-            const icon = document.querySelector(`img[title*="${form?.querySelector('h2')?.innerText?.trim()}"]`);
-            if (form) form.remove();
-            if (icon) icon.remove();
-          });
-        }
-      }
-    } else {
-      window.location.href = 'index.html';
-    }
-  });
-
-  // 👤 Crear usuario y guardar perfil en Firestore
+  // Crear usuario
   if (formCrearUsuario) {
     formCrearUsuario.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -110,19 +89,16 @@ document.addEventListener("DOMContentLoaded", () => {
       try {
         const cred = await createUserWithEmailAndPassword(auth, email, password);
         const uid = cred.user.uid;
-
-        // Guardar perfil en Firestore
         await setDoc(doc(db, "usuarios", uid), {
           correo: email,
           perfil: perfil,
           creado: new Date()
         });
-
         alert(`Usuario ${email} creado con éxito como ${perfil}`);
         formCrearUsuario.reset();
       } catch (error) {
-        if (error.code === 'auth/email-already-in-use') {
-          alert('Este correo ya está registrado.');
+        if (error.code === "auth/email-already-in-use") {
+          alert("El correo ya está registrado.");
         } else {
           alert("Error al crear usuario.");
         }
@@ -131,4 +107,3 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
-
