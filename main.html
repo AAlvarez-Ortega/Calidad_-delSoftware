@@ -29,19 +29,23 @@
     <div class="content">
       <!-- Agregar Usuario -->
       <div id="agregar" class="formulario hidden">
-        <form>
+        <form id="formCrearUsuario">
           <h2>Agregar Usuario</h2>
-          <label>Nombre:</label>
-          <input type="text" name="nuevo" />
+          <label>Correo electrónico:</label>
+          <input type="email" name="nuevo" id="nuevoCorreo" required />
+
           <label>Contraseña:</label>
-          <input type="password" name="new_pass" />
+          <input type="password" name="new_pass" id="nuevaClave" required />
+
           <label>Perfil:</label>
-          <select name="perfil">
+          <select name="perfil" id="perfilUsuario">
             <option value="admin">Admin</option>
             <option value="user">User</option>
           </select>
+
           <input type="submit" value="Guardar" />
         </form>
+
       </div>
 
       <!-- Eliminar Usuario -->

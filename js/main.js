@@ -50,6 +50,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
+//serrar sesion
 import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
 import { auth } from './firebase.js';
 
@@ -70,3 +71,44 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
+
+//logica, crear usuarios
+import { getAuth, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+import { auth } from './firebase.js';
+
+document.addEventListener('DOMContentLoaded', () => {
+  const btnLogout = document.getElementById('btnLogout');
+  const formCrearUsuario = document.getElementById('formCrearUsuario');
+
+  // 🔐 Cerrar sesión
+  if (btnLogout) {
+    btnLogout.addEventListener('click', () => {
+      signOut(auth).then(() => {
+        localStorage.removeItem('usuario');
+        window.location.href = 'index.html';
+      }).catch((error) => {
+        alert('Error al cerrar sesión.');
+        console.error(error);
+      });
+    });
+  }
+
+  // 🧑‍💻 Crear usuario
+  if (formCrearUsuario) {
+    formCrearUsuario.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('nuevoCorreo').value;
+      const password = document.getElementById('nuevaClave').value;
+      const perfil = document.getElementById('perfilUsuario').value;
+
+      try {
+        const cred = await createUserWithEmailAndPassword(auth, email, password);
+        alert(`Usuario ${email} creado con éxito como ${perfil}`);
+        formCrearUsuario.reset();
+      } catch (error) {
+        alert("Error al crear usuario.");
+        console.error(error.code, error.message);
+      }
+    });
+  }
+});
