@@ -7,28 +7,34 @@ document.addEventListener("DOMContentLoaded", () => {
     if (target) target.classList.remove('hidden');
   }
 
-  // Hacer accesible globalmente
-  window.mostrarFormulario = mostrarFormulario;
+window.mostrarFormulario = function(id) {
+  const formularios = document.querySelectorAll('.formulario');
+  formularios.forEach(f => f.classList.add('hidden'));
+  const target = document.getElementById(id);
+  if (target) target.classList.remove('hidden');
+  cerrarSidebarSiVisible();
+};
 
-  // Mostrar subformulario de descarga
-  window.mostrarFormularioDescarga = function (tipo) {
-    const form = document.getElementById('formularioDescarga');
-    if (form) {
-      form.classList.remove('hidden');
-      document.getElementById('tipoArchivoDescarga').value = tipo;
-      document.getElementById('tipoSeleccionadoDescarga').innerText = tipo.toUpperCase();
-    }
-  };
+window.mostrarFormularioDescarga = function(tipo) {
+  const form = document.getElementById('formularioDescarga');
+  if (form) {
+    form.classList.remove('hidden');
+    document.getElementById('tipoArchivoDescarga').value = tipo;
+    document.getElementById('tipoSeleccionadoDescarga').innerText = tipo.toUpperCase();
+    cerrarSidebarSiVisible();
+  }
+};
 
-  // Mostrar subformulario de eliminación
-  window.mostrarFormularioEliminar = function (tipo) {
-    const form = document.getElementById('formularioEliminar');
-    if (form) {
-      form.classList.remove('hidden');
-      document.getElementById('tipoArchivoEliminar').value = tipo;
-      document.getElementById('tipoSeleccionadoEliminar').innerText = tipo.toUpperCase();
-    }
-  };
+window.mostrarFormularioEliminar = function(tipo) {
+  const form = document.getElementById('formularioEliminar');
+  if (form) {
+    form.classList.remove('hidden');
+    document.getElementById('tipoArchivoEliminar').value = tipo;
+    document.getElementById('tipoSeleccionadoEliminar').innerText = tipo.toUpperCase();
+    cerrarSidebarSiVisible();
+  }
+};
+
 
   // Lógica del botón de menú
   const toggleBtn = document.getElementById('toggleMenu');
@@ -40,3 +46,11 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
+function cerrarSidebarSiVisible() {
+  const sidebar = document.getElementById('sidebar');
+  // Si tiene la clase 'hidden', ya está cerrado, no hacemos nada
+  if (window.innerWidth <= 768 && sidebar && !sidebar.classList.contains('hidden')) {
+    sidebar.classList.add('hidden');
+  }
+}
+
