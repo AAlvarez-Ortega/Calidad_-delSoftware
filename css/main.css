@@ -1,4 +1,4 @@
-/* Reset y base */
+/* Reset y fuente base */
 * {
   margin: 0;
   padding: 0;
@@ -14,27 +14,43 @@ body {
   flex-direction: column;
 }
 
-/* Título */
-h1 {
-  text-align: center;
-  padding: 20px;
+/* Barra superior */
+.topbar {
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
   background-color: #fff;
   color: #7a003c;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  height: 60px;
 }
 
-/* Contenedor general */
+.topbar h1 {
+  flex: 1;
+  text-align: center;
+  font-size: 1.2rem;
+}
+
+#toggleMenu {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #7a003c;
+}
+
+/* Contenedor principal */
 .container {
   flex: 1;
   display: flex;
-  flex-direction: row;
-  height: calc(100vh - 80px); /* altura total menos el encabezado */
+  height: calc(100vh - 60px);
   overflow: hidden;
 }
 
-/* Menú lateral */
+/* Sidebar vertical */
 .sidebar {
   width: 80px;
+  min-width: 80px;
   background-color: #fff;
   border-right: 1px solid #ccc;
   padding: 10px 5px;
@@ -42,10 +58,14 @@ h1 {
   flex-direction: column;
   align-items: center;
   gap: 20px;
-  overflow-y: auto;
+  transition: transform 0.3s ease;
 }
 
-/* Íconos del menú */
+.sidebar.hidden {
+  transform: translateX(-100%);
+}
+
+/* Íconos de sidebar */
 .sidebar img {
   width: 40px;
   height: 40px;
@@ -57,7 +77,7 @@ h1 {
   transform: scale(1.1);
 }
 
-/* Contenido dinámico */
+/* Contenido principal */
 .content {
   flex: 1;
   overflow-y: auto;
@@ -125,12 +145,12 @@ input[type="submit"]:hover {
   transform: scale(1.1);
 }
 
-/* Formularios ocultos */
+/* Ocultos por lógica JS */
 .hidden {
   display: none;
 }
 
-/* Media Query para pantallas pequeñas */
+/* Adaptación a móvil */
 @media (max-width: 768px) {
   .container {
     flex-direction: column;
@@ -138,14 +158,13 @@ input[type="submit"]:hover {
   }
 
   .sidebar {
-    flex-direction: row;
-    width: 100%;
-    justify-content: center;
-    gap: 10px;
-    border-right: none;
-    border-bottom: 1px solid #ccc;
-    padding: 10px;
-    overflow-x: auto;
+    position: absolute;
+    z-index: 10;
+    height: calc(100vh - 60px);
+    top: 60px;
+    left: 0;
+    background-color: #fff;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
   }
 
   .content {
