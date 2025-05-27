@@ -3,118 +3,28 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Menú Principal</title>
-  <link rel="stylesheet" href="css/main.css" />
+  <title>Iniciar Sesión</title>
+  <link rel="stylesheet" href="css/login.css" />
 </head>
 <body>
-  <!-- Encabezado con botón de menú -->
-  <header class="topbar">
-    <button id="toggleMenu">☰</button>
-    <h1>Menú Principal</h1>
-  </header>
+  <div class="login-container">
+    <img src="images/agregar_usuario.png" alt="Login" class="icono" />
+    <h1>Iniciar Sesión</h1>
 
-  <div class="container">
-    <!-- Menú lateral colapsable -->
-    <div class="sidebar" id="sidebar">
-      <img src="images/agregar_usuario.png" alt="Agregar Usuario" title="Agregar Usuario" onclick="mostrarFormulario('agregar')" />
-      <img src="images/eliminar_usuario.png" alt="Eliminar Usuario" title="Eliminar Usuario" onclick="mostrarFormulario('eliminar')" />
-      <img src="images/subir.png" alt="Subir Archivo" title="Subir Archivo" onclick="mostrarFormulario('subir')" />
-      <img src="images/bajar.png" alt="Bajar Archivo" title="Bajar Archivo" onclick="mostrarFormulario('bajar')" />
-      <img src="images/eliminar.png" alt="Eliminar Archivo" title="Eliminar Archivo" onclick="mostrarFormulario('eliminar_archivo')" />
-      <img src="images/salir.png" alt="Salir" title="Salir" onclick="location.href='login.html'" />
-    </div>
+    <form id="loginForm">
+      <label for="usuario">Correo electrónico</label>
+      <input type="text" id="usuario" name="usuario" required />
 
-    <!-- Contenido dinámico -->
-    <div class="content">
-      <!-- Agregar Usuario -->
-      <div id="agregar" class="formulario hidden">
-        <form>
-          <h2>Agregar Usuario</h2>
-          <label>Nombre:</label>
-          <input type="text" name="nuevo" />
-          <label>Contraseña:</label>
-          <input type="password" name="new_pass" />
-          <label>Perfil:</label>
-          <select name="perfil">
-            <option value="admin">Admin</option>
-            <option value="user">User</option>
-          </select>
-          <input type="submit" value="Guardar" />
-        </form>
-      </div>
+      <label for="contrasena">Contraseña</label>
+      <input type="password" id="contrasena" name="contrasena" required />
 
-      <!-- Eliminar Usuario -->
-      <div id="eliminar" class="formulario hidden">
-        <form>
-          <h2>Eliminar Usuario</h2>
-          <label>Usuario:</label>
-          <input type="text" name="usuario" />
-          <input type="submit" value="Eliminar" />
-        </form>
-      </div>
-
-      <!-- Subir Archivo -->
-      <div id="subir" class="formulario hidden">
-        <form>
-          <h2>Subir Archivo</h2>
-          <input type="file" name="file" />
-          <input type="submit" value="Subir" />
-        </form>
-      </div>
-
-      <!-- Descargar Archivo -->
-      <div id="bajar" class="formulario hidden">
-        <h2>Selecciona el tipo de archivo a DESCARGAR</h2>
-        <div class="iconos">
-          <img src="images/pdf.png" alt="PDF" width="60" onclick="mostrarFormularioDescarga('pdf')" />
-          <img src="images/doc.png" alt="DOC" width="60" onclick="mostrarFormularioDescarga('doc')" />
-          <img src="images/excel.png" alt="Excel" width="60" onclick="mostrarFormularioDescarga('excel')" />
-          <img src="images/ppoint.png" alt="PowerPoint" width="60" onclick="mostrarFormularioDescarga('ppoint')" />
-          <img src="images/music.png" alt="Música" width="60" onclick="mostrarFormularioDescarga('music')" />
-          <img src="images/video.png" alt="Video" width="60" onclick="mostrarFormularioDescarga('video')" />
-          <img src="images/files.png" alt="Todos" width="60" onclick="mostrarFormularioDescarga('todos')" />
-        </div>
-        <form id="formularioDescarga" class="hidden" action="descargar_archivo.jsp" method="post">
-          <h3>Descargar archivos de tipo: <span id="tipoSeleccionadoDescarga"></span></h3>
-          <input type="hidden" name="tipoArchivo" id="tipoArchivoDescarga" />
-          <label for="archivo">Selecciona un archivo:</label>
-          <select name="archivo">
-            <option value="archivo1.pdf">archivo1.pdf</option>
-            <option value="archivo2.pdf">archivo2.pdf</option>
-          </select>
-          <input type="submit" value="Descargar" />
-        </form>
-      </div>
-
-      <!-- Eliminar Archivo -->
-      <div id="eliminar_archivo" class="formulario hidden">
-        <h2>Selecciona el tipo de archivo a ELIMINAR</h2>
-        <div class="iconos">
-          <img src="images/pdf.png" alt="PDF" width="60" onclick="mostrarFormularioEliminar('pdf')" />
-          <img src="images/doc.png" alt="DOC" width="60" onclick="mostrarFormularioEliminar('doc')" />
-          <img src="images/excel.png" alt="Excel" width="60" onclick="mostrarFormularioEliminar('excel')" />
-          <img src="images/ppoint.png" alt="PowerPoint" width="60" onclick="mostrarFormularioEliminar('ppoint')" />
-          <img src="images/music.png" alt="Música" width="60" onclick="mostrarFormularioEliminar('music')" />
-          <img src="images/video.png" alt="Video" width="60" onclick="mostrarFormularioEliminar('video')" />
-          <img src="images/files.png" alt="Todos" width="60" onclick="mostrarFormularioEliminar('todos')" />
-        </div>
-        <form id="formularioEliminar" class="hidden" action="eliminar_archivo.jsp" method="post">
-          <h3>Eliminar archivos de tipo: <span id="tipoSeleccionadoEliminar"></span></h3>
-          <input type="hidden" name="tipoArchivo" id="tipoArchivoEliminar" />
-          <label for="archivo">Selecciona un archivo:</label>
-          <select name="archivo">
-            <option value="archivo1.pdf">archivo1.pdf</option>
-            <option value="archivo2.pdf">archivo2.pdf</option>
-          </select>
-          <input type="submit" value="Eliminar" />
-        </form>
-      </div>
-    </div>
+      <input type="submit" value="Ingresar" />
+    </form>
   </div>
 
-  <!-- Script externo -->
-  <script src="js/main.js"></script>
+  <!-- Scripts -->
   <script type="module" src="js/firebase.js"></script>
-
+  <script type="module" src="js/login.js"></script>
 </body>
 </html>
+
