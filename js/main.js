@@ -10,36 +10,8 @@ import {
   db,
   doc,
   setDoc,
-   getDoc
+  getDoc
 } from './firebase.js';
-
-onAuthStateChanged(auth, async (user) => {
-  if (user) {
-    const uid = user.uid;
-    const docRef = doc(db, "usuarios", uid);
-    const docSnap = await getDoc(docRef);
-
-    if (docSnap.exists()) {
-      const perfil = docSnap.data().perfil;
-
-      // Mostrar correo en la interfaz
-      document.getElementById('userInfo').textContent = `Perfil: ${perfil}`;
-
-      if (perfil !== 'admin') {
-        // Ocultar formularios que no son para usuarios normales
-        document.getElementById('agregar').remove();
-        document.getElementById('eliminar').remove();
-        document.querySelector('img[title="Agregar Usuario"]').remove();
-        document.querySelector('img[title="Eliminar Usuario"]').remove();
-      }
-
-    } else {
-      alert("No se encontró información de perfil.");
-    }
-  } else {
-    window.location.href = 'index.html'; // Redirigir si no hay sesión
-  }
-});
 
 document.addEventListener("DOMContentLoaded", () => {
   const toggleBtn = document.getElementById('toggleMenu');
@@ -103,6 +75,30 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // Detectar perfil y ocultar formularios si no es admin
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      const uid = user.uid;
+      const userDoc = await getDoc(doc(db, "usuarios", uid));
+      if (userDoc.exists()) {
+        const perfil = userDoc.data().perfil;
+        document.getElementById('userInfo').textContent = `Perfil: ${perfil}`;
+
+        if (perfil !== 'admin') {
+          const adminForms = ['agregar', 'eliminar'];
+          adminForms.forEach(id => {
+            const form = document.getElementById(id);
+            const icon = document.querySelector(`img[title*="${form?.querySelector('h2')?.innerText?.trim()}"]`);
+            if (form) form.remove();
+            if (icon) icon.remove();
+          });
+        }
+      }
+    } else {
+      window.location.href = 'index.html';
+    }
+  });
+
   // 👤 Crear usuario y guardar perfil en Firestore
   if (formCrearUsuario) {
     formCrearUsuario.addEventListener('submit', async (e) => {
@@ -125,7 +121,11 @@ document.addEventListener("DOMContentLoaded", () => {
         alert(`Usuario ${email} creado con éxito como ${perfil}`);
         formCrearUsuario.reset();
       } catch (error) {
-        alert("Error al crear usuario.");
+        if (error.code === 'auth/email-already-in-use') {
+          alert('Este correo ya está registrado.');
+        } else {
+          alert("Error al crear usuario.");
+        }
         console.error(error.code, error.message);
       }
     });
