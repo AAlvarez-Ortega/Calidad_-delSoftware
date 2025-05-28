@@ -195,3 +195,56 @@ input[type="submit"]:hover {
     padding: 20px;
   }
 }
+
+
+/* Estilo de lista profesional para archivos */
+.lista-archivos {
+  list-style: none;
+  padding: 0;
+  margin: 0 auto;
+  max-width: 600px;
+}
+
+.lista-archivos li {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  margin-bottom: 10px;
+  padding: 15px 20px;
+  border-radius: 10px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: box-shadow 0.3s;
+}
+
+.lista-archivos li:hover {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+}
+
+.lista-archivos a {
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.lista-archivos a:hover {
+  color: #7a003c;
+}
+
+.lista-archivos button {
+  background-color: transparent;
+  border: none;
+  color: #e00;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 6px 10px;
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+
+.lista-archivos button:hover {
+  background-color: #fdd;
+}
