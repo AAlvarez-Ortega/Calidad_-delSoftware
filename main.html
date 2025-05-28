@@ -40,10 +40,19 @@
         </form>
       </div>
 
-      <div id="eliminar" class="formulario hidden">
-        <h2>Eliminar Usuario</h2>
-        <p>Esta funcionalidad aún no está disponible en esta vista.</p>
-      </div>
+ <div id="eliminar" class="formulario hidden">
+  <h2>Eliminar Usuario</h2>
+  <form id="formEliminarUsuario">
+    <label for="usuarioEliminar">Selecciona un usuario:</label>
+    <select id="usuarioEliminar" required>
+      <option value="">-- Cargando usuarios... --</option>
+    </select>
+    <input type="submit" value="Eliminar Usuario">
+  </form>
+</div>
+
+
+
 
       <div id="subir" class="formulario hidden">
         <form id="formSubirArchivo">

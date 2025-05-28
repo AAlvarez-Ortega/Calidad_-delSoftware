@@ -13,7 +13,10 @@ import {
 import {
   doc,
   setDoc,
-  getDoc
+  getDoc,
+  getDocs,
+  deleteDoc,
+  collection
 } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
 
 import { supabase } from './supabase.js';
@@ -24,8 +27,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const btnLogout = document.getElementById('btnLogout');
   const formCrearUsuario = document.getElementById('formCrearUsuario');
   const formSubirArchivo = document.getElementById('formSubirArchivo');
+  const formEliminarUsuario = document.getElementById('formEliminarUsuario');
+  const selectUsuarios = document.getElementById('usuarioEliminar');
 
-  // Mostrar formularios
   window.mostrarFormulario = function (id) {
     const formularios = document.querySelectorAll('.formulario');
     formularios.forEach(f => f.classList.add('hidden'));
@@ -48,7 +52,21 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Validar perfil
+  async function cargarUsuariosParaEliminar(uidActual) {
+    const snapshot = await getDocs(collection(db, "usuarios"));
+    selectUsuarios.innerHTML = '<option value="">-- Selecciona un usuario --</option>';
+
+    snapshot.forEach(docSnap => {
+      if (docSnap.id !== uidActual) {
+        const data = docSnap.data();
+        const option = document.createElement('option');
+        option.value = docSnap.id;
+        option.textContent = `${data.correo} (${data.perfil})`;
+        selectUsuarios.appendChild(option);
+      }
+    });
+  }
+
   onAuthStateChanged(auth, async (user) => {
     if (user) {
       const docSnap = await getDoc(doc(db, "usuarios", user.uid));
@@ -59,6 +77,8 @@ document.addEventListener("DOMContentLoaded", () => {
         if (data.perfil !== "admin") {
           document.getElementById("agregar").style.display = "none";
           document.getElementById("eliminar").style.display = "none";
+        } else {
+          await cargarUsuariosParaEliminar(user.uid);
         }
       } else {
         alert("No se encontró el perfil del usuario.");
@@ -68,7 +88,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Logout
   if (btnLogout) {
     btnLogout.addEventListener('click', () => {
       signOut(auth).then(() => {
@@ -81,7 +100,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Crear usuario
   if (formCrearUsuario) {
     formCrearUsuario.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -99,7 +117,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
         alert(`Usuario ${email} creado con éxito como ${perfil}`);
         formCrearUsuario.reset();
-        signOut(auth); // cerrar sesión automática tras creación
+        signOut(auth);
       } catch (error) {
         if (error.code === "auth/email-already-in-use") {
           alert("El correo ya está registrado.");
@@ -111,39 +129,54 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-// Subir archivo a Supabase
-if (formSubirArchivo) {
-  formSubirArchivo.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const fileInput = document.getElementById('archivoSubir');
-    const file = fileInput.files[0];
-    if (!file) return alert("Selecciona un archivo primero.");
+  if (formEliminarUsuario) {
+    formEliminarUsuario.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const uidAEliminar = selectUsuarios.value;
+      if (!uidAEliminar) return alert("Selecciona un usuario válido");
 
-    // Sanitiza el nombre del archivo (quita acentos y caracteres especiales)
-    const safeFileName = file.name
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '')
-      .replace(/[^\w.-]/g, '_');
+      const confirmar = confirm("¿Estás seguro de eliminar este usuario?");
+      if (!confirmar) return;
 
-    const { data, error } = await supabase.storage.from('archivos').upload(safeFileName, file, {
-      cacheControl: '3600',
-      upsert: true
+      try {
+        await deleteDoc(doc(db, "usuarios", uidAEliminar));
+        alert("Usuario eliminado de Firestore con éxito.");
+        await cargarUsuariosParaEliminar(auth.currentUser.uid);
+      } catch (error) {
+        alert("Error al eliminar usuario.");
+        console.error(error);
+      }
     });
+  }
 
-    if (error) {
-      alert('Error al subir archivo');
-      console.error(error);
-    } else {
-      alert('Archivo subido con éxito');
-      fileInput.value = '';
-      cargarArchivos();
-    }
-  });
-}
+  if (formSubirArchivo) {
+    formSubirArchivo.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const fileInput = document.getElementById('archivoSubir');
+      const file = fileInput.files[0];
+      if (!file) return alert("Selecciona un archivo primero.");
 
+      const safeFileName = file.name
+        .normalize('NFD')
+        .replace(/[̀-ͯ]/g, '')
+        .replace(/[^\w.-]/g, '_');
 
+      const { data, error } = await supabase.storage.from('archivos').upload(safeFileName, file, {
+        cacheControl: '3600',
+        upsert: true
+      });
 
-  // Cargar archivos disponibles para descarga y eliminación
+      if (error) {
+        alert('Error al subir archivo');
+        console.error(error);
+      } else {
+        alert('Archivo subido con éxito');
+        fileInput.value = '';
+        cargarArchivos();
+      }
+    });
+  }
+
   async function cargarArchivos() {
     const { data, error } = await supabase.storage.from('archivos').list();
     const listaDescargas = document.getElementById('listaDescargas');
@@ -185,6 +218,5 @@ if (formSubirArchivo) {
     });
   }
 
-  // Cargar archivos al entrar
   cargarArchivos();
 });
